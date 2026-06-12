@@ -23,8 +23,10 @@ class ReminderListTab(QWidget):
     def __init__(self, engine: ReminderEngine, parent=None):
         super().__init__(parent)
         self.engine = engine
+        self.theme_manager = get_theme_manager(self)
         self._init_ui()
         self._load_data()
+        self.theme_manager.theme_changed.connect(lambda _: self._load_data())
 
     def _init_ui(self):
         layout = QVBoxLayout(self)
@@ -53,23 +55,31 @@ class ReminderListTab(QWidget):
 
         self.table = QTableWidget()
         self.table.setColumnCount(6)
-        self.table.setHorizontalHeaderLabels(["ID", "标题", "类型", "触发时间", "提前", "状态"])
+        self.table.setHorizontalHeaderLabels(["序号", "标题", "类型", "触发时间", "提前", "状态"])
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-        self.table.setColumnWidth(0, 40)
+        self.table.setColumnWidth(0, 50)
+        self.table.verticalHeader().setVisible(True)
+        self.table.verticalHeader().setDefaultSectionSize(36)
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.table.setAlternatingRowColors(True)
-        self.table.setStyleSheet("alternate-background-color: #1a1a2e;")
         layout.addWidget(self.table)
 
     def _load_data(self):
         reminders = database.get_reminders()
         self.table.setRowCount(len(reminders))
         type_labels = {"single": "单次", "daily": "每天", "weekly": "每周", "monthly": "每月", "yearly": "每年"}
+        theme = self.theme_manager.get_theme()
+        color_success = QColor(theme["text_success"])
+        color_warning = QColor(theme["text_warning"])
         for row, r in enumerate(reminders):
-            self.table.setItem(row, 0, QTableWidgetItem(str(r["id"])))
+            id_item = QTableWidgetItem(str(r["id"]))
+            id_item.setData(Qt.ItemDataRole.UserRole, r["id"])
+            id_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            self.table.setItem(row, 0, id_item)
+
             self.table.setItem(row, 1, QTableWidgetItem(r["title"]))
             self.table.setItem(row, 2, QTableWidgetItem(type_labels.get(r["reminder_type"], r["reminder_type"])))
             try:
@@ -89,7 +99,7 @@ class ReminderListTab(QWidget):
             self.table.setItem(row, 4, QTableWidgetItem(f"提前{advance}分" if advance > 0 else "无"))
             status = "✅ 启用" if r.get("enabled", 1) else "⏸️ 停用"
             item = QTableWidgetItem(status)
-            item.setForeground(QColor("#27ae60") if r.get("enabled", 1) else QColor("#e74c3c"))
+            item.setForeground(color_success if r.get("enabled", 1) else color_warning)
             self.table.setItem(row, 5, item)
 
     def _add_reminder(self):
@@ -390,8 +400,10 @@ class IntervalTab(QWidget):
 class HistoryTab(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.theme_manager = get_theme_manager(self)
         self._init_ui()
         self._load_data()
+        self.theme_manager.theme_changed.connect(lambda _: self._load_data())
 
     def _init_ui(self):
         layout = QVBoxLayout(self)
@@ -431,14 +443,15 @@ class HistoryTab(QWidget):
 
         self.table = QTableWidget()
         self.table.setColumnCount(5)
-        self.table.setHorizontalHeaderLabels(["ID", "标题", "内容", "类型", "触发时间"])
+        self.table.setHorizontalHeaderLabels(["序号", "标题", "内容", "类型", "触发时间"])
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-        self.table.setColumnWidth(0, 40)
+        self.table.setColumnWidth(0, 50)
+        self.table.verticalHeader().setVisible(True)
+        self.table.verticalHeader().setDefaultSectionSize(36)
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.table.setAlternatingRowColors(True)
-        self.table.setStyleSheet("alternate-background-color: #1a1a2e;")
         layout.addWidget(self.table)
 
     def _load_data(self):
@@ -449,8 +462,14 @@ class HistoryTab(QWidget):
         history = database.get_history(date_filter=date_filter, unread_only=unread_only)
         self.table.setRowCount(len(history))
         type_labels = {"timed": "定时", "countdown": "倒计时", "interval": "间隔", "hourly": "整点"}
+        theme = self.theme_manager.get_theme()
+        accent_color = QColor(theme["text_accent"])
         for row, h in enumerate(history):
-            self.table.setItem(row, 0, QTableWidgetItem(str(h["id"])))
+            id_item = QTableWidgetItem(str(h["id"]))
+            id_item.setData(Qt.ItemDataRole.UserRole, h["id"])
+            id_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            self.table.setItem(row, 0, id_item)
+
             self.table.setItem(row, 1, QTableWidgetItem(h["title"]))
             self.table.setItem(row, 2, QTableWidgetItem(h.get("content", "")))
             self.table.setItem(row, 3, QTableWidgetItem(type_labels.get(h.get("reminder_type", ""), h.get("reminder_type", ""))))
@@ -464,7 +483,7 @@ class HistoryTab(QWidget):
                 font = item.font()
                 font.setBold(True)
                 item.setFont(font)
-                item.setForeground(QColor("#e94560"))
+                item.setForeground(accent_color)
             self.table.setItem(row, 4, item)
 
     def _mark_all_read(self):

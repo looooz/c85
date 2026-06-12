@@ -29,6 +29,7 @@ class AddReminderDialog(QDialog):
         layout = QVBoxLayout(self)
 
         form = QFormLayout()
+        self._form_layout = form
 
         self.title_edit = QLineEdit()
         self.title_edit.setPlaceholderText("提醒标题")
@@ -51,13 +52,13 @@ class AddReminderDialog(QDialog):
 
         self.week_combo = QComboBox()
         self.week_combo.addItems(["周一", "周二", "周三", "周四", "周五", "周六", "周日"])
-        self.week_combo.setVisible(False)
         form.addRow("星期：", self.week_combo)
+        self._week_row = form.rowCount() - 1
 
         self.month_spin = QSpinBox()
         self.month_spin.setRange(1, 31)
-        self.month_spin.setVisible(False)
         form.addRow("日期：", self.month_spin)
+        self._month_row = form.rowCount() - 1
 
         self.advance_combo = QComboBox()
         self.advance_combo.addItems(["不提前", "提前5分钟", "提前10分钟", "提前30分钟"])
@@ -107,9 +108,24 @@ class AddReminderDialog(QDialog):
         self._on_type_changed(0)
 
     def _on_type_changed(self, index):
-        self.week_combo.setVisible(index == 2)
-        self.month_spin.setVisible(index == 3)
-        self.datetime_edit.setDisplayFormat("yyyy-MM-dd HH:mm")
+        form = self._form_layout
+        week_visible = (index == 2)
+        month_visible = (index == 3)
+
+        week_label_item = form.itemAt(self._week_row, QFormLayout.ItemRole.LabelRole)
+        week_field_item = form.itemAt(self._week_row, QFormLayout.ItemRole.FieldRole)
+        if week_label_item and week_label_item.widget():
+            week_label_item.widget().setVisible(week_visible)
+        if week_field_item and week_field_item.widget():
+            week_field_item.widget().setVisible(week_visible)
+
+        month_label_item = form.itemAt(self._month_row, QFormLayout.ItemRole.LabelRole)
+        month_field_item = form.itemAt(self._month_row, QFormLayout.ItemRole.FieldRole)
+        if month_label_item and month_label_item.widget():
+            month_label_item.widget().setVisible(month_visible)
+        if month_field_item and month_field_item.widget():
+            month_field_item.widget().setVisible(month_visible)
+
         if index == 0:
             self.datetime_edit.setDisplayFormat("yyyy-MM-dd HH:mm")
         elif index in (1, 2, 3, 4):

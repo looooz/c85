@@ -10,14 +10,14 @@ DARK_THEME = {
     "bg_secondary": "#16213e",
     "bg_card": "#16213e",
     "bg_tertiary": "#0f3460",
-    "accent": "#e94560",
-    "accent_hover": "#ff6b81",
-    "accent_active": "#c0392b",
+    "accent": "#4a9eff",
+    "accent_hover": "#6bb3ff",
+    "accent_active": "#3a7ed8",
     "text_primary": "#e0e0e0",
     "text_secondary": "#a0a0b0",
-    "text_accent": "#e94560",
-    "text_success": "#27ae60",
-    "text_error": "#e74c3c",
+    "text_accent": "#4a9eff",
+    "text_success": "#2ecc71",
+    "text_error": "#e67e22",
     "text_warning": "#f39c12",
     "border": "#1a1a2e",
     "border_accent": "#0f3460",
@@ -26,16 +26,16 @@ DARK_THEME = {
     "selection_text": "#ffffff",
     "alternate_row": "#1a1a2e",
     "notification_bg": "#2c3e50",
-    "notification_border": "#3498db",
-    "tray_icon_bg": "#e94560",
+    "notification_border": "#4a9eff",
+    "tray_icon_bg": "#4a9eff",
     "tray_icon_text": "#ffffff",
     "button_bg": "#0f3460",
     "button_text": "#e0e0e0",
-    "button_hover_bg": "#e94560",
+    "button_hover_bg": "#4a9eff",
     "button_hover_text": "#ffffff",
-    "button_pressed_bg": "#c0392b",
+    "button_pressed_bg": "#3a7ed8",
     "progress_bg": "#16213e",
-    "progress_bar": "qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #e94560, stop:1 #ff6b81)",
+    "progress_bar": "qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #4a9eff, stop:1 #6bb3ff)",
 }
 
 LIGHT_THEME = {
@@ -45,32 +45,32 @@ LIGHT_THEME = {
     "bg_secondary": "#ffffff",
     "bg_card": "#ffffff",
     "bg_tertiary": "#e8ecf1",
-    "accent": "#e94560",
-    "accent_hover": "#ff6b81",
-    "accent_active": "#c0392b",
+    "accent": "#4a9eff",
+    "accent_hover": "#6bb3ff",
+    "accent_active": "#3a7ed8",
     "text_primary": "#2c3e50",
     "text_secondary": "#7f8c8d",
-    "text_accent": "#e94560",
-    "text_success": "#27ae60",
-    "text_error": "#e74c3c",
+    "text_accent": "#4a9eff",
+    "text_success": "#2ecc71",
+    "text_error": "#e67e22",
     "text_warning": "#f39c12",
     "border": "#dcdfe6",
-    "border_accent": "#e94560",
+    "border_accent": "#4a9eff",
     "grid_line": "#ebeef5",
-    "selection_bg": "#e94560",
+    "selection_bg": "#4a9eff",
     "selection_text": "#ffffff",
     "alternate_row": "#f5f7fa",
     "notification_bg": "#ffffff",
-    "notification_border": "#e94560",
-    "tray_icon_bg": "#e94560",
+    "notification_border": "#4a9eff",
+    "tray_icon_bg": "#4a9eff",
     "tray_icon_text": "#ffffff",
-    "button_bg": "#e94560",
+    "button_bg": "#4a9eff",
     "button_text": "#ffffff",
-    "button_hover_bg": "#ff6b81",
+    "button_hover_bg": "#6bb3ff",
     "button_hover_text": "#ffffff",
-    "button_pressed_bg": "#c0392b",
+    "button_pressed_bg": "#3a7ed8",
     "progress_bg": "#e8ecf1",
-    "progress_bar": "qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #e94560, stop:1 #ff6b81)",
+    "progress_bar": "qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #4a9eff, stop:1 #6bb3ff)",
 }
 
 
@@ -275,9 +275,75 @@ class ThemeManager(QObject):
             padding: 4px 8px;
             selection-background-color: {t['selection_bg']};
             selection-color: {t['selection_text']};
+            min-height: 20px;
         }}
         QDateEdit:focus, QTimeEdit:focus, QDateTimeEdit:focus, QSpinBox:focus, QComboBox:focus, QLineEdit:focus, QTextEdit:focus {{
             border: 1px solid {t['accent']};
+        }}
+        QSpinBox::up-button, QDateEdit::up-button, QTimeEdit::up-button, QDateTimeEdit::up-button {{
+            subcontrol-origin: border;
+            subcontrol-position: top right;
+            width: 18px;
+            background: {t['bg_tertiary']};
+            border-top-right-radius: 4px;
+            border-left: 1px solid {t['border']};
+            border-bottom: 1px solid {t['border']};
+        }}
+        QSpinBox::up-button:hover, QDateEdit::up-button:hover, QTimeEdit::up-button:hover, QDateTimeEdit::up-button:hover {{
+            background: {t['accent']};
+        }}
+        QSpinBox::down-button, QDateEdit::down-button, QTimeEdit::down-button, QDateTimeEdit::down-button {{
+            subcontrol-origin: border;
+            subcontrol-position: bottom right;
+            width: 18px;
+            background: {t['bg_tertiary']};
+            border-bottom-right-radius: 4px;
+            border-left: 1px solid {t['border']};
+        }}
+        QSpinBox::down-button:hover, QDateEdit::down-button:hover, QTimeEdit::down-button:hover, QDateTimeEdit::down-button:hover {{
+            background: {t['accent']};
+        }}
+        QSpinBox::up-arrow, QDateEdit::up-arrow, QTimeEdit::up-arrow, QDateTimeEdit::up-arrow {{
+            width: 8px;
+            height: 8px;
+            image: none;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 5px solid {t['text_secondary']};
+        }}
+        QSpinBox::down-arrow, QDateEdit::down-arrow, QTimeEdit::down-arrow, QDateTimeEdit::down-arrow {{
+            width: 8px;
+            height: 8px;
+            image: none;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid {t['text_secondary']};
+        }}
+        QSpinBox::up-arrow:hover, QDateEdit::up-arrow:hover, QTimeEdit::up-arrow:hover, QDateTimeEdit::up-arrow:hover {{
+            border-bottom-color: white;
+        }}
+        QSpinBox::down-arrow:hover, QDateEdit::down-arrow:hover, QTimeEdit::down-arrow:hover, QDateTimeEdit::down-arrow:hover {{
+            border-top-color: white;
+        }}
+        QComboBox::drop-down {{
+            width: 20px;
+            border: none;
+            background: {t['bg_tertiary']};
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }}
+        QComboBox::drop-down:hover {{
+            background: {t['accent']};
+        }}
+        QComboBox::down-arrow {{
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid {t['text_secondary']};
+        }}
+        QComboBox::down-arrow:hover {{
+            border-top-color: white;
         }}
         QComboBox QAbstractItemView {{
             background: {t['bg_secondary']};
@@ -285,6 +351,23 @@ class ThemeManager(QObject):
             selection-background-color: {t['selection_bg']};
             selection-color: {t['selection_text']};
             border: 1px solid {t['bg_tertiary']};
+            outline: none;
+        }}
+        QTableCornerButton::section {{
+            background: {t['bg_tertiary']};
+            border: none;
+            border-right: 1px solid {t['border']};
+            border-bottom: 1px solid {t['border']};
+        }}
+        QHeaderView::section:vertical {{
+            background: {t['bg_tertiary']};
+            color: {t['text_accent']};
+            padding: 6px 4px;
+            border: none;
+            border-right: 1px solid {t['border']};
+            border-bottom: 1px solid {t['border']};
+            font-weight: bold;
+            font-size: 12px;
         }}
         QStatusBar {{
             background: {t['bg_secondary']};
@@ -508,9 +591,75 @@ class ThemeManager(QObject):
             padding: 4px 8px;
             selection-background-color: {t['selection_bg']};
             selection-color: {t['selection_text']};
+            min-height: 20px;
         }}
         QDateEdit:focus, QTimeEdit:focus, QDateTimeEdit:focus, QSpinBox:focus, QComboBox:focus, QLineEdit:focus, QTextEdit:focus {{
             border: 1px solid {t['accent']};
+        }}
+        QSpinBox::up-button, QDateEdit::up-button, QTimeEdit::up-button, QDateTimeEdit::up-button {{
+            subcontrol-origin: border;
+            subcontrol-position: top right;
+            width: 18px;
+            background: {t['bg_tertiary']};
+            border-top-right-radius: 4px;
+            border-left: 1px solid {t['border']};
+            border-bottom: 1px solid {t['border']};
+        }}
+        QSpinBox::up-button:hover, QDateEdit::up-button:hover, QTimeEdit::up-button:hover, QDateTimeEdit::up-button:hover {{
+            background: {t['accent']};
+        }}
+        QSpinBox::down-button, QDateEdit::down-button, QTimeEdit::down-button, QDateTimeEdit::down-button {{
+            subcontrol-origin: border;
+            subcontrol-position: bottom right;
+            width: 18px;
+            background: {t['bg_tertiary']};
+            border-bottom-right-radius: 4px;
+            border-left: 1px solid {t['border']};
+        }}
+        QSpinBox::down-button:hover, QDateEdit::down-button:hover, QTimeEdit::down-button:hover, QDateTimeEdit::down-button:hover {{
+            background: {t['accent']};
+        }}
+        QSpinBox::up-arrow, QDateEdit::up-arrow, QTimeEdit::up-arrow, QDateTimeEdit::up-arrow {{
+            width: 8px;
+            height: 8px;
+            image: none;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 5px solid {t['text_secondary']};
+        }}
+        QSpinBox::down-arrow, QDateEdit::down-arrow, QTimeEdit::down-arrow, QDateTimeEdit::down-arrow {{
+            width: 8px;
+            height: 8px;
+            image: none;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid {t['text_secondary']};
+        }}
+        QSpinBox::up-arrow:hover, QDateEdit::up-arrow:hover, QTimeEdit::up-arrow:hover, QDateTimeEdit::up-arrow:hover {{
+            border-bottom-color: white;
+        }}
+        QSpinBox::down-arrow:hover, QDateEdit::down-arrow:hover, QTimeEdit::down-arrow:hover, QDateTimeEdit::down-arrow:hover {{
+            border-top-color: white;
+        }}
+        QComboBox::drop-down {{
+            width: 20px;
+            border: none;
+            background: {t['bg_tertiary']};
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }}
+        QComboBox::drop-down:hover {{
+            background: {t['accent']};
+        }}
+        QComboBox::down-arrow {{
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid {t['text_secondary']};
+        }}
+        QComboBox::down-arrow:hover {{
+            border-top-color: white;
         }}
         QComboBox QAbstractItemView {{
             background: {t['bg_secondary']};
@@ -518,6 +667,23 @@ class ThemeManager(QObject):
             selection-background-color: {t['selection_bg']};
             selection-color: {t['selection_text']};
             border: 1px solid {t['border']};
+            outline: none;
+        }}
+        QTableCornerButton::section {{
+            background: {t['bg_tertiary']};
+            border: none;
+            border-right: 1px solid {t['border']};
+            border-bottom: 1px solid {t['border']};
+        }}
+        QHeaderView::section:vertical {{
+            background: {t['bg_tertiary']};
+            color: {t['text_accent']};
+            padding: 6px 4px;
+            border: none;
+            border-right: 1px solid {t['border']};
+            border-bottom: 1px solid {t['border']};
+            font-weight: bold;
+            font-size: 12px;
         }}
         QStatusBar {{
             background: {t['bg_secondary']};
