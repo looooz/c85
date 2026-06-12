@@ -89,6 +89,7 @@ def init_db():
         "default_sound": "default",
         "default_volume": "80",
         "tts_enabled": "0",
+        "theme": "dark",
     }
     for k, v in defaults.items():
         c.execute(

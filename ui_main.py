@@ -12,173 +12,11 @@ from PyQt6.QtGui import QAction, QIcon, QFont, QColor
 
 import database
 from core import ReminderEngine, AudioManager, FocusModeManager
+from theme import get_theme_manager
 from ui_dialogs import (
     AddReminderDialog, AddCountdownDialog, AddIntervalDialog,
     SettingsDialog, NotificationPopup,
 )
-
-
-STYLESHEET = """
-QMainWindow {
-    background: #1a1a2e;
-}
-QTabWidget::pane {
-    border: 1px solid #16213e;
-    background: #1a1a2e;
-    border-radius: 4px;
-}
-QTabBar::tab {
-    background: #16213e;
-    color: #a0a0b0;
-    padding: 8px 20px;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    margin-right: 2px;
-    font-size: 13px;
-}
-QTabBar::tab:selected {
-    background: #0f3460;
-    color: #e94560;
-    font-weight: bold;
-}
-QTabBar::tab:hover {
-    background: #0f3460;
-}
-QTableWidget {
-    background: #16213e;
-    color: #e0e0e0;
-    gridline-color: #1a1a2e;
-    border: none;
-    selection-background-color: #0f3460;
-    selection-color: #ffffff;
-    font-size: 13px;
-}
-QTableWidget::item {
-    padding: 6px;
-}
-QHeaderView::section {
-    background: #0f3460;
-    color: #e94560;
-    padding: 6px;
-    border: none;
-    font-weight: bold;
-    font-size: 12px;
-}
-QPushButton {
-    background: #0f3460;
-    color: #e0e0e0;
-    border: 1px solid #1a1a2e;
-    border-radius: 6px;
-    padding: 7px 16px;
-    font-size: 13px;
-}
-QPushButton:hover {
-    background: #e94560;
-    color: #ffffff;
-}
-QPushButton:pressed {
-    background: #c0392b;
-}
-QPushButton#addBtn {
-    background: #e94560;
-    color: white;
-    font-weight: bold;
-    border-radius: 8px;
-    padding: 10px 24px;
-    font-size: 14px;
-}
-QPushButton#addBtn:hover {
-    background: #ff6b81;
-}
-QPushButton#pauseBtn {
-    background: #f39c12;
-    color: white;
-}
-QPushButton#pauseBtn:hover {
-    background: #e67e22;
-}
-QPushButton#focusBtn {
-    background: #27ae60;
-    color: white;
-}
-QPushButton#focusBtn:hover {
-    background: #2ecc71;
-}
-QPushButton#focusBtn:checked {
-    background: #e94560;
-}
-QGroupBox {
-    color: #e94560;
-    border: 1px solid #0f3460;
-    border-radius: 8px;
-    margin-top: 10px;
-    padding-top: 16px;
-    font-weight: bold;
-    font-size: 13px;
-}
-QGroupBox::title {
-    subcontrol-origin: margin;
-    left: 12px;
-    padding: 0 6px;
-}
-QLabel {
-    color: #e0e0e0;
-    font-size: 13px;
-}
-QLabel#countdownLabel {
-    color: #e94560;
-    font-size: 22px;
-    font-weight: bold;
-}
-QLabel#intervalStatusLabel {
-    color: #f39c12;
-    font-size: 13px;
-}
-QProgressBar {
-    background: #16213e;
-    border: 1px solid #0f3460;
-    border-radius: 6px;
-    text-align: center;
-    color: white;
-    font-size: 12px;
-    height: 20px;
-}
-QProgressBar::chunk {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-        stop:0 #e94560, stop:1 #ff6b81);
-    border-radius: 5px;
-}
-QCheckBox {
-    color: #e0e0e0;
-    font-size: 13px;
-}
-QDateEdit {
-    background: #16213e;
-    color: #e0e0e0;
-    border: 1px solid #0f3460;
-    border-radius: 4px;
-    padding: 4px;
-}
-QStatusBar {
-    background: #16213e;
-    color: #a0a0b0;
-    font-size: 12px;
-}
-QToolBar {
-    background: #16213e;
-    border: none;
-    spacing: 8px;
-    padding: 4px;
-}
-QSplitter::handle {
-    background: #0f3460;
-}
-QFrame#cardFrame {
-    background: #16213e;
-    border-radius: 8px;
-    border: 1px solid #0f3460;
-}
-"""
 
 
 class ReminderListTab(QWidget):
@@ -678,6 +516,7 @@ class MainWindow(QMainWindow):
         self.resize(900, 700)
         self.tray_manager = None
 
+        self.theme_manager = get_theme_manager(self)
         self.audio = AudioManager(self)
         self.focus_mode = FocusModeManager(self)
         self.engine = ReminderEngine(self.audio, self.focus_mode, self)
@@ -685,6 +524,7 @@ class MainWindow(QMainWindow):
         self._init_ui()
         self._connect_signals()
         self._start_status_timer()
+        self._apply_theme()
 
     def closeEvent(self, event):
         if self.tray_manager:
@@ -700,8 +540,6 @@ class MainWindow(QMainWindow):
             event.accept()
 
     def _init_ui(self):
-        self.setStyleSheet(STYLESHEET)
-
         central = QWidget()
         self.setCentralWidget(central)
         layout = QVBoxLayout(central)
@@ -729,7 +567,6 @@ class MainWindow(QMainWindow):
         control_bar.addStretch()
 
         self.next_reminder_label = QLabel("下一个提醒：计算中...")
-        self.next_reminder_label.setStyleSheet("color: #a0a0b0; font-size: 12px;")
         control_bar.addWidget(self.next_reminder_label)
 
         layout.addLayout(control_bar)
@@ -755,6 +592,18 @@ class MainWindow(QMainWindow):
         self.engine.interval_triggered.connect(self._on_interval_triggered)
         self.engine.hourly_chime_triggered.connect(self._on_hourly_chime)
         self.focus_mode.focus_mode_changed.connect(self.focus_btn.setChecked)
+        self.theme_manager.theme_changed.connect(self._on_theme_changed)
+
+    def _apply_theme(self):
+        stylesheet = self.theme_manager.get_stylesheet()
+        self.setStyleSheet(stylesheet)
+        self.reminder_tab._load_data()
+        self.countdown_tab._load_data()
+        self.interval_tab._load_data()
+        self.history_tab._load_data()
+
+    def _on_theme_changed(self, theme_name):
+        self._apply_theme()
 
     def _start_status_timer(self):
         self._status_timer = QTimer(self)
@@ -806,6 +655,8 @@ class MainWindow(QMainWindow):
         dlg = SettingsDialog(self)
         if dlg.exec() == QDialog.DialogCode.Accepted:
             self.focus_mode._load_settings()
+            self.theme_manager._load_theme()
+            self._apply_theme()
             self._update_status()
 
     def _on_reminder_triggered(self, data):

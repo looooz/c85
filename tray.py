@@ -8,6 +8,7 @@ from PyQt6.QtGui import QIcon, QAction, QPainter, QColor, QFont, QPixmap
 
 import database
 from core import ReminderEngine, FocusModeManager
+from theme import get_theme_manager
 
 
 def create_tray_icon(icon_char="⏰", size=64):
@@ -32,6 +33,7 @@ class FloatingWindow(QWidget):
     def __init__(self, engine: ReminderEngine, parent=None):
         super().__init__(parent)
         self.engine = engine
+        self.theme_manager = get_theme_manager(self)
         self.setWindowFlags(
             Qt.WindowType.FramelessWindowHint
             | Qt.WindowType.WindowStaysOnTopHint
@@ -41,40 +43,50 @@ class FloatingWindow(QWidget):
         self._init_ui()
         self._drag_pos = None
         self._start_timer()
+        self.theme_manager.theme_changed.connect(self._apply_theme)
 
     def _init_ui(self):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(12, 10, 12, 10)
 
-        inner = QWidget()
-        inner.setObjectName("floatingInner")
-        inner.setStyleSheet("""
-            #floatingInner {
-                background: rgba(26, 26, 46, 230);
-                border: 1px solid #0f3460;
-                border-radius: 10px;
-            }
-        """)
-        inner_layout = QVBoxLayout(inner)
+        self.inner_widget = QWidget()
+        self.inner_widget.setObjectName("floatingInner")
+        inner_layout = QVBoxLayout(self.inner_widget)
         inner_layout.setContentsMargins(10, 8, 10, 8)
 
         self.title_label = QLabel("下一个提醒")
-        self.title_label.setStyleSheet("color: #e94560; font-size: 11px; font-weight: bold;")
         self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         inner_layout.addWidget(self.title_label)
 
         self.time_label = QLabel("--:--")
-        self.time_label.setStyleSheet("color: #ffffff; font-size: 18px; font-weight: bold;")
         self.time_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         inner_layout.addWidget(self.time_label)
 
         self.content_label = QLabel("暂无")
-        self.content_label.setStyleSheet("color: #a0a0b0; font-size: 11px;")
         self.content_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         inner_layout.addWidget(self.content_label)
 
-        layout.addWidget(inner)
+        layout.addWidget(self.inner_widget)
         self.resize(160, 90)
+        self._apply_theme()
+
+    def _apply_theme(self):
+        theme = self.theme_manager.get_theme()
+        name = theme["name"]
+        if name == "dark":
+            bg = "rgba(26, 26, 46, 230)"
+        else:
+            bg = "rgba(255, 255, 255, 230)"
+        self.inner_widget.setStyleSheet(f"""
+            #floatingInner {{
+                background: {bg};
+                border: 1px solid {theme['border_accent']};
+                border-radius: 10px;
+            }}
+        """)
+        self.title_label.setStyleSheet(f"color: {theme['text_accent']}; font-size: 11px; font-weight: bold;")
+        self.time_label.setStyleSheet(f"color: {theme['text_primary']}; font-size: 18px; font-weight: bold;")
+        self.content_label.setStyleSheet(f"color: {theme['text_secondary']}; font-size: 11px;")
 
     def _start_timer(self):
         self._timer = QTimer(self)

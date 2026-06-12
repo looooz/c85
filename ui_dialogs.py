@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from PyQt6.QtWidgets import (
@@ -10,6 +11,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QDateTime, QTime
 
 import database
+from theme import get_theme_manager
 
 
 class AddReminderDialog(QDialog):
@@ -94,9 +96,10 @@ class AddReminderDialog(QDialog):
         sound_group.setLayout(sound_layout)
         layout.addWidget(sound_group)
 
-        buttons = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
+        buttons = QDialogButtonBox()
+        ok_btn = buttons.addButton("确定", QDialogButtonBox.ButtonRole.AcceptRole)
+        cancel_btn = buttons.addButton("取消", QDialogButtonBox.ButtonRole.RejectRole)
+        ok_btn.setObjectName("okButton")
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
@@ -225,9 +228,10 @@ class AddCountdownDialog(QDialog):
 
         layout.addLayout(form)
 
-        buttons = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
+        buttons = QDialogButtonBox()
+        ok_btn = buttons.addButton("确定", QDialogButtonBox.ButtonRole.AcceptRole)
+        cancel_btn = buttons.addButton("取消", QDialogButtonBox.ButtonRole.RejectRole)
+        ok_btn.setObjectName("okButton")
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
@@ -315,9 +319,10 @@ class AddIntervalDialog(QDialog):
 
         layout.addLayout(form)
 
-        buttons = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
+        buttons = QDialogButtonBox()
+        ok_btn = buttons.addButton("确定", QDialogButtonBox.ButtonRole.AcceptRole)
+        cancel_btn = buttons.addButton("取消", QDialogButtonBox.ButtonRole.RejectRole)
+        ok_btn.setObjectName("okButton")
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
@@ -425,6 +430,13 @@ class SettingsDialog(QDialog):
 
         default_group = QGroupBox("默认设置")
         default_layout = QFormLayout()
+
+        self.theme_combo = QComboBox()
+        self.theme_manager = get_theme_manager()
+        for key, name in self.theme_manager.get_all_themes():
+            self.theme_combo.addItem(name, key)
+        default_layout.addRow("界面主题：", self.theme_combo)
+
         self.default_volume = QSlider(Qt.Orientation.Horizontal)
         self.default_volume.setRange(0, 100)
         self.default_volume_label = QLabel("80%")
@@ -438,9 +450,10 @@ class SettingsDialog(QDialog):
         default_group.setLayout(default_layout)
         layout.addWidget(default_group)
 
-        buttons = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
-        )
+        buttons = QDialogButtonBox()
+        ok_btn = buttons.addButton("确定", QDialogButtonBox.ButtonRole.AcceptRole)
+        cancel_btn = buttons.addButton("取消", QDialogButtonBox.ButtonRole.RejectRole)
+        ok_btn.setObjectName("okButton")
         buttons.accepted.connect(self._save_and_accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
@@ -463,6 +476,10 @@ class SettingsDialog(QDialog):
             self.focus_end.setTime(QTime(int(parts[0]), int(parts[1])))
         self.fullscreen_whitelist.setChecked(database.get_setting("whitelist_fullscreen", "1") == "1")
         self.default_volume.setValue(int(database.get_setting("default_volume", "80")))
+        theme = database.get_setting("theme", "dark")
+        index = self.theme_combo.findData(theme)
+        if index >= 0:
+            self.theme_combo.setCurrentIndex(index)
 
     def _save_and_accept(self):
         database.set_setting("hourly_chime_enabled", "1" if self.chime_enabled.isChecked() else "0")
@@ -476,12 +493,14 @@ class SettingsDialog(QDialog):
         database.set_setting("focus_mode_end", self.focus_end.time().toString("HH:mm"))
         database.set_setting("whitelist_fullscreen", "1" if self.fullscreen_whitelist.isChecked() else "0")
         database.set_setting("default_volume", str(self.default_volume.value()))
+        database.set_setting("theme", self.theme_combo.currentData())
         self.accept()
 
 
 class NotificationPopup(QWidget):
     def __init__(self, title, content, parent=None):
         super().__init__(parent)
+        self.theme_manager = get_theme_manager(self)
         self.setWindowFlags(
             Qt.WindowType.FramelessWindowHint
             | Qt.WindowType.WindowStaysOnTopHint
@@ -498,38 +517,48 @@ class NotificationPopup(QWidget):
 
         inner = QWidget(self)
         inner.setObjectName("notificationInner")
-        inner.setStyleSheet("""
-            #notificationInner {
-                background: #2c3e50;
-                border-radius: 12px;
-                border: 2px solid #3498db;
-            }
-        """)
+        self._inner_widget = inner
         inner_layout = QVBoxLayout(inner)
 
-        title_label = QLabel(f"🔔 {title}")
-        title_label.setStyleSheet("color: #ecf0f1; font-size: 16px; font-weight: bold;")
-        inner_layout.addWidget(title_label)
+        self.title_label = QLabel(f"🔔 {title}")
+        self.title_label.setObjectName("notificationTitle")
+        inner_layout.addWidget(self.title_label)
 
+        self.content_label = None
         if content:
-            content_label = QLabel(content)
-            content_label.setStyleSheet("color: #bdc3c7; font-size: 13px;")
-            content_label.setWordWrap(True)
-            inner_layout.addWidget(content_label)
+            self.content_label = QLabel(content)
+            self.content_label.setObjectName("notificationContent")
+            self.content_label.setWordWrap(True)
+            inner_layout.addWidget(self.content_label)
 
         close_btn = QPushButton("关闭")
-        close_btn.setStyleSheet("""
-            QPushButton {
-                background: #e74c3c; color: white; border: none;
-                border-radius: 4px; padding: 6px 20px;
-            }
-            QPushButton:hover { background: #c0392b; }
-        """)
+        close_btn.setObjectName("notificationCloseBtn")
         close_btn.clicked.connect(self.close)
         inner_layout.addWidget(close_btn, alignment=Qt.AlignmentFlag.AlignRight)
 
         layout.addWidget(inner)
         self.setFixedSize(320, 160)
+        self._apply_theme()
+
+    def _apply_theme(self):
+        theme = self.theme_manager.get_theme()
+        self._inner_widget.setStyleSheet(f"""
+            #notificationInner {{
+                background: {theme['notification_bg']};
+                border-radius: 12px;
+                border: 2px solid {theme['notification_border']};
+            }}
+        """)
+        self.title_label.setStyleSheet(f"""
+            color: {theme['text_primary']};
+            font-size: 16px;
+            font-weight: bold;
+        """)
+        if self.content_label:
+            self.content_label.setStyleSheet(f"""
+                color: {theme['text_secondary']};
+                font-size: 13px;
+            """)
 
     def show_at_bottom_right(self):
         from PyQt6.QtWidgets import QApplication
