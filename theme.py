@@ -272,20 +272,24 @@ class ThemeManager(QObject):
             color: {t['text_primary']};
             border: 1px solid {t['bg_tertiary']};
             border-radius: 4px;
-            padding: 4px 8px;
+            padding: 4px 28px 4px 8px;
             selection-background-color: {t['selection_bg']};
             selection-color: {t['selection_text']};
-            min-height: 20px;
+            min-height: 28px;
         }}
         QDateEdit:focus, QTimeEdit:focus, QDateTimeEdit:focus, QSpinBox:focus, QComboBox:focus, QLineEdit:focus, QTextEdit:focus {{
             border: 1px solid {t['accent']};
         }}
+        QLineEdit, QTextEdit {{
+            padding: 4px 8px;
+        }}
         QSpinBox::up-button, QDateEdit::up-button, QTimeEdit::up-button, QDateTimeEdit::up-button {{
             subcontrol-origin: border;
             subcontrol-position: top right;
-            width: 18px;
+            width: 24px;
+            height: 14px;
             background: {t['bg_tertiary']};
-            border-top-right-radius: 4px;
+            border-top-right-radius: 3px;
             border-left: 1px solid {t['border']};
             border-bottom: 1px solid {t['border']};
         }}
@@ -295,9 +299,10 @@ class ThemeManager(QObject):
         QSpinBox::down-button, QDateEdit::down-button, QTimeEdit::down-button, QDateTimeEdit::down-button {{
             subcontrol-origin: border;
             subcontrol-position: bottom right;
-            width: 18px;
+            width: 24px;
+            height: 14px;
             background: {t['bg_tertiary']};
-            border-bottom-right-radius: 4px;
+            border-bottom-right-radius: 3px;
             border-left: 1px solid {t['border']};
         }}
         QSpinBox::down-button:hover, QDateEdit::down-button:hover, QTimeEdit::down-button:hover, QDateTimeEdit::down-button:hover {{
@@ -326,11 +331,15 @@ class ThemeManager(QObject):
             border-top-color: white;
         }}
         QComboBox::drop-down {{
-            width: 20px;
+            subcontrol-origin: border;
+            subcontrol-position: center right;
+            width: 24px;
+            height: 24px;
             border: none;
             background: {t['bg_tertiary']};
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+            border-left: 1px solid {t['border']};
         }}
         QComboBox::drop-down:hover {{
             background: {t['accent']};
@@ -353,16 +362,86 @@ class ThemeManager(QObject):
             border: 1px solid {t['bg_tertiary']};
             outline: none;
         }}
+        QCalendarWidget {{
+            background: {t['bg_secondary']};
+            color: {t['text_primary']};
+            border: 1px solid {t['bg_tertiary']};
+            border-radius: 6px;
+        }}
+        QCalendarWidget QWidget#qt_calendar_navigationbar {{
+            background: {t['bg_tertiary']};
+            border: none;
+            min-height: 32px;
+        }}
+        QCalendarWidget QToolButton {{
+            background: transparent;
+            color: {t['text_primary']};
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            min-width: 24px;
+            min-height: 24px;
+        }}
+        QCalendarWidget QToolButton:hover {{
+            background: {t['accent']};
+            color: white;
+        }}
+        QCalendarWidget QMenu {{
+            background: {t['bg_secondary']};
+            color: {t['text_primary']};
+            border: 1px solid {t['bg_tertiary']};
+        }}
+        QCalendarWidget QMenu::item:selected {{
+            background: {t['accent']};
+            color: white;
+        }}
+        QCalendarWidget QAbstractItemView {{
+            background: {t['bg_secondary']};
+            color: {t['text_primary']};
+            selection-background-color: {t['accent']};
+            selection-color: white;
+            outline: none;
+        }}
+        QCalendarWidget QHeaderView::section {{
+            background: {t['bg_tertiary']};
+            color: {t['text_accent']};
+            padding: 4px;
+            border: none;
+            font-weight: bold;
+        }}
+        #qt_calendar_prevmonth, #qt_calendar_nextmonth {{
+            qproperty-iconSize: 16px;
+        }}
         QTableCornerButton::section {{
             background: {t['bg_tertiary']};
+            color: {t['text_accent']};
             border: none;
             border-right: 1px solid {t['border']};
             border-bottom: 1px solid {t['border']};
         }}
+        QHeaderView {{
+            background: {t['bg_tertiary']};
+        }}
+        QHeaderView::section {{
+            background: {t['bg_tertiary']};
+            color: {t['accent']};
+            padding: 6px;
+            border: none;
+            font-weight: bold;
+            font-size: 12px;
+        }}
+        QHeaderView::section:horizontal {{
+            background: {t['bg_tertiary']};
+            color: {t['accent']};
+            padding: 6px;
+            border: none;
+            font-weight: bold;
+            font-size: 12px;
+        }}
         QHeaderView::section:vertical {{
             background: {t['bg_tertiary']};
             color: {t['text_accent']};
-            padding: 6px 4px;
+            padding: 6px 8px;
             border: none;
             border-right: 1px solid {t['border']};
             border-bottom: 1px solid {t['border']};
@@ -588,20 +667,24 @@ class ThemeManager(QObject):
             color: {t['text_primary']};
             border: 1px solid {t['border']};
             border-radius: 4px;
-            padding: 4px 8px;
+            padding: 4px 28px 4px 8px;
             selection-background-color: {t['selection_bg']};
             selection-color: {t['selection_text']};
-            min-height: 20px;
+            min-height: 28px;
         }}
         QDateEdit:focus, QTimeEdit:focus, QDateTimeEdit:focus, QSpinBox:focus, QComboBox:focus, QLineEdit:focus, QTextEdit:focus {{
             border: 1px solid {t['accent']};
         }}
+        QLineEdit, QTextEdit {{
+            padding: 4px 8px;
+        }}
         QSpinBox::up-button, QDateEdit::up-button, QTimeEdit::up-button, QDateTimeEdit::up-button {{
             subcontrol-origin: border;
             subcontrol-position: top right;
-            width: 18px;
+            width: 24px;
+            height: 14px;
             background: {t['bg_tertiary']};
-            border-top-right-radius: 4px;
+            border-top-right-radius: 3px;
             border-left: 1px solid {t['border']};
             border-bottom: 1px solid {t['border']};
         }}
@@ -611,9 +694,10 @@ class ThemeManager(QObject):
         QSpinBox::down-button, QDateEdit::down-button, QTimeEdit::down-button, QDateTimeEdit::down-button {{
             subcontrol-origin: border;
             subcontrol-position: bottom right;
-            width: 18px;
+            width: 24px;
+            height: 14px;
             background: {t['bg_tertiary']};
-            border-bottom-right-radius: 4px;
+            border-bottom-right-radius: 3px;
             border-left: 1px solid {t['border']};
         }}
         QSpinBox::down-button:hover, QDateEdit::down-button:hover, QTimeEdit::down-button:hover, QDateTimeEdit::down-button:hover {{
@@ -642,11 +726,15 @@ class ThemeManager(QObject):
             border-top-color: white;
         }}
         QComboBox::drop-down {{
-            width: 20px;
+            subcontrol-origin: border;
+            subcontrol-position: center right;
+            width: 24px;
+            height: 24px;
             border: none;
             background: {t['bg_tertiary']};
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+            border-left: 1px solid {t['border']};
         }}
         QComboBox::drop-down:hover {{
             background: {t['accent']};
@@ -669,16 +757,86 @@ class ThemeManager(QObject):
             border: 1px solid {t['border']};
             outline: none;
         }}
+        QCalendarWidget {{
+            background: {t['bg_secondary']};
+            color: {t['text_primary']};
+            border: 1px solid {t['border']};
+            border-radius: 6px;
+        }}
+        QCalendarWidget QWidget#qt_calendar_navigationbar {{
+            background: {t['bg_tertiary']};
+            border: none;
+            min-height: 32px;
+        }}
+        QCalendarWidget QToolButton {{
+            background: transparent;
+            color: {t['text_primary']};
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            min-width: 24px;
+            min-height: 24px;
+        }}
+        QCalendarWidget QToolButton:hover {{
+            background: {t['accent']};
+            color: white;
+        }}
+        QCalendarWidget QMenu {{
+            background: {t['bg_secondary']};
+            color: {t['text_primary']};
+            border: 1px solid {t['border']};
+        }}
+        QCalendarWidget QMenu::item:selected {{
+            background: {t['accent']};
+            color: white;
+        }}
+        QCalendarWidget QAbstractItemView {{
+            background: {t['bg_secondary']};
+            color: {t['text_primary']};
+            selection-background-color: {t['accent']};
+            selection-color: white;
+            outline: none;
+        }}
+        QCalendarWidget QHeaderView::section {{
+            background: {t['bg_tertiary']};
+            color: {t['text_accent']};
+            padding: 4px;
+            border: none;
+            font-weight: bold;
+        }}
+        #qt_calendar_prevmonth, #qt_calendar_nextmonth {{
+            qproperty-iconSize: 16px;
+        }}
         QTableCornerButton::section {{
             background: {t['bg_tertiary']};
+            color: {t['text_accent']};
             border: none;
             border-right: 1px solid {t['border']};
             border-bottom: 1px solid {t['border']};
         }}
+        QHeaderView {{
+            background: {t['bg_tertiary']};
+        }}
+        QHeaderView::section {{
+            background: {t['bg_tertiary']};
+            color: {t['accent']};
+            padding: 6px;
+            border: none;
+            font-weight: bold;
+            font-size: 12px;
+        }}
+        QHeaderView::section:horizontal {{
+            background: {t['bg_tertiary']};
+            color: {t['accent']};
+            padding: 6px;
+            border: none;
+            font-weight: bold;
+            font-size: 12px;
+        }}
         QHeaderView::section:vertical {{
             background: {t['bg_tertiary']};
             color: {t['text_accent']};
-            padding: 6px 4px;
+            padding: 6px 8px;
             border: none;
             border-right: 1px solid {t['border']};
             border-bottom: 1px solid {t['border']};
