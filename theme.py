@@ -286,8 +286,8 @@ class ThemeManager(QObject):
         QSpinBox::up-button, QDateEdit::up-button, QTimeEdit::up-button, QDateTimeEdit::up-button {{
             subcontrol-origin: border;
             subcontrol-position: top right;
-            width: 24px;
-            height: 14px;
+            width: 22px;
+            height: 13px;
             background: {t['bg_tertiary']};
             border-top-right-radius: 3px;
             border-left: 1px solid {t['border']};
@@ -299,8 +299,8 @@ class ThemeManager(QObject):
         QSpinBox::down-button, QDateEdit::down-button, QTimeEdit::down-button, QDateTimeEdit::down-button {{
             subcontrol-origin: border;
             subcontrol-position: bottom right;
-            width: 24px;
-            height: 14px;
+            width: 22px;
+            height: 13px;
             background: {t['bg_tertiary']};
             border-bottom-right-radius: 3px;
             border-left: 1px solid {t['border']};
@@ -309,32 +309,41 @@ class ThemeManager(QObject):
             background: {t['accent']};
         }}
         QSpinBox::up-arrow, QDateEdit::up-arrow, QTimeEdit::up-arrow, QDateTimeEdit::up-arrow {{
-            width: 8px;
-            height: 8px;
+            width: 1px;
+            height: 1px;
             image: none;
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-bottom: 5px solid {t['text_secondary']};
+            background: transparent;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 7px solid {t['text_secondary']};
+            subcontrol-position: center;
         }}
         QSpinBox::down-arrow, QDateEdit::down-arrow, QTimeEdit::down-arrow, QDateTimeEdit::down-arrow {{
-            width: 8px;
-            height: 8px;
+            width: 1px;
+            height: 1px;
             image: none;
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-top: 5px solid {t['text_secondary']};
+            background: transparent;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 7px solid {t['text_secondary']};
+            subcontrol-position: center;
         }}
-        QSpinBox::up-arrow:hover, QDateEdit::up-arrow:hover, QTimeEdit::up-arrow:hover, QDateTimeEdit::up-arrow:hover {{
-            border-bottom-color: white;
+        QSpinBox::up-button:hover::up-arrow,
+        QDateEdit::up-button:hover::up-arrow,
+        QTimeEdit::up-button:hover::up-arrow,
+        QDateTimeEdit::up-button:hover::up-arrow {{
+            border-bottom-color: #ffffff;
         }}
-        QSpinBox::down-arrow:hover, QDateEdit::down-arrow:hover, QTimeEdit::down-arrow:hover, QDateTimeEdit::down-arrow:hover {{
-            border-top-color: white;
+        QSpinBox::down-button:hover::down-arrow,
+        QDateEdit::down-button:hover::down-arrow,
+        QTimeEdit::down-button:hover::down-arrow,
+        QDateTimeEdit::down-button:hover::down-arrow {{
+            border-top-color: #ffffff;
         }}
         QComboBox::drop-down {{
             subcontrol-origin: border;
             subcontrol-position: center right;
             width: 24px;
-            height: 24px;
             border: none;
             background: {t['bg_tertiary']};
             border-top-right-radius: 3px;
@@ -345,14 +354,17 @@ class ThemeManager(QObject):
             background: {t['accent']};
         }}
         QComboBox::down-arrow {{
-            width: 0;
-            height: 0;
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-top: 5px solid {t['text_secondary']};
+            width: 1px;
+            height: 1px;
+            image: none;
+            background: transparent;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 7px solid {t['text_secondary']};
+            subcontrol-position: center;
         }}
-        QComboBox::down-arrow:hover {{
-            border-top-color: white;
+        QComboBox::drop-down:hover::down-arrow {{
+            border-top-color: #ffffff;
         }}
         QComboBox QAbstractItemView {{
             background: {t['bg_secondary']};
@@ -681,8 +693,8 @@ class ThemeManager(QObject):
         QSpinBox::up-button, QDateEdit::up-button, QTimeEdit::up-button, QDateTimeEdit::up-button {{
             subcontrol-origin: border;
             subcontrol-position: top right;
-            width: 24px;
-            height: 14px;
+            width: 22px;
+            height: 13px;
             background: {t['bg_tertiary']};
             border-top-right-radius: 3px;
             border-left: 1px solid {t['border']};
@@ -694,8 +706,8 @@ class ThemeManager(QObject):
         QSpinBox::down-button, QDateEdit::down-button, QTimeEdit::down-button, QDateTimeEdit::down-button {{
             subcontrol-origin: border;
             subcontrol-position: bottom right;
-            width: 24px;
-            height: 14px;
+            width: 22px;
+            height: 13px;
             background: {t['bg_tertiary']};
             border-bottom-right-radius: 3px;
             border-left: 1px solid {t['border']};
@@ -704,32 +716,41 @@ class ThemeManager(QObject):
             background: {t['accent']};
         }}
         QSpinBox::up-arrow, QDateEdit::up-arrow, QTimeEdit::up-arrow, QDateTimeEdit::up-arrow {{
-            width: 8px;
-            height: 8px;
+            width: 1px;
+            height: 1px;
             image: none;
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-bottom: 5px solid {t['text_secondary']};
+            background: transparent;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 7px solid {t['text_secondary']};
+            subcontrol-position: center;
         }}
         QSpinBox::down-arrow, QDateEdit::down-arrow, QTimeEdit::down-arrow, QDateTimeEdit::down-arrow {{
-            width: 8px;
-            height: 8px;
+            width: 1px;
+            height: 1px;
             image: none;
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-top: 5px solid {t['text_secondary']};
+            background: transparent;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 7px solid {t['text_secondary']};
+            subcontrol-position: center;
         }}
-        QSpinBox::up-arrow:hover, QDateEdit::up-arrow:hover, QTimeEdit::up-arrow:hover, QDateTimeEdit::up-arrow:hover {{
-            border-bottom-color: white;
+        QSpinBox::up-button:hover::up-arrow,
+        QDateEdit::up-button:hover::up-arrow,
+        QTimeEdit::up-button:hover::up-arrow,
+        QDateTimeEdit::up-button:hover::up-arrow {{
+            border-bottom-color: #ffffff;
         }}
-        QSpinBox::down-arrow:hover, QDateEdit::down-arrow:hover, QTimeEdit::down-arrow:hover, QDateTimeEdit::down-arrow:hover {{
-            border-top-color: white;
+        QSpinBox::down-button:hover::down-arrow,
+        QDateEdit::down-button:hover::down-arrow,
+        QTimeEdit::down-button:hover::down-arrow,
+        QDateTimeEdit::down-button:hover::down-arrow {{
+            border-top-color: #ffffff;
         }}
         QComboBox::drop-down {{
             subcontrol-origin: border;
             subcontrol-position: center right;
             width: 24px;
-            height: 24px;
             border: none;
             background: {t['bg_tertiary']};
             border-top-right-radius: 3px;
@@ -740,14 +761,17 @@ class ThemeManager(QObject):
             background: {t['accent']};
         }}
         QComboBox::down-arrow {{
-            width: 0;
-            height: 0;
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-top: 5px solid {t['text_secondary']};
+            width: 1px;
+            height: 1px;
+            image: none;
+            background: transparent;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 7px solid {t['text_secondary']};
+            subcontrol-position: center;
         }}
-        QComboBox::down-arrow:hover {{
-            border-top-color: white;
+        QComboBox::drop-down:hover::down-arrow {{
+            border-top-color: #ffffff;
         }}
         QComboBox QAbstractItemView {{
             background: {t['bg_secondary']};
